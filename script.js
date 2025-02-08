@@ -94,7 +94,23 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           const wordData = results[0].result;
-          if (!wordData || !wordData.length) return;
+          
+          // If no words found, display a random starter word
+          if (!wordData || !wordData.length) {
+            currentRow = 0;
+            const starterWords = ['raise', 'arise'];
+            const randomWord = starterWords[Math.floor(Math.random() * starterWords.length)];
+            
+            const row = board.children[currentRow];
+            for (let i = 0; i < 5; i++) {
+              const cell = row.children[i];
+              cell.textContent = randomWord[i].toUpperCase();
+              cell.style.backgroundColor = '';
+              cell.style.color = 'black';
+            }
+            currentRow++;
+            return;
+          }
 
           // Clear existing board
           currentRow = 0;

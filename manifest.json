@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Wordle Game Add-in",
+  "name": "Wordle Game Solver Add-in",
   "version": "1.0",
-  "description": "A Chrome add-in that mimics the Wordle game interface.",
+  "description": "Get smart hints for your Wordle game! This extension analyzes your current game and suggests optimal next guesses.",
   "icons": {
     "16": "icons/icon16.png", 
     "48": "icons/icon48.png",
