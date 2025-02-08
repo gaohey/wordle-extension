@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<!-- saved from url=(0134)https://s0.2mdn.net/sadbundle/18337982200683714271/index.html?e=69&leftOffset=0&topOffset=0&c=ZVfxEV2eql&t=1&renderingType=2&ev=01_253 -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+	
+	<title></title>
+	<meta name="ad.size" content="width=970,height=250">  
+	<link rel="stylesheet" href="./style.css">
+	<script src="./Enabler_01_253.js.下载"></script>
+    <script src="./gsap_3.2.4_min.js.下载"></script><meta http-equiv="origin-trial" content="A4AD7vbM2W0e5fHylDM4fFrsUvtmQ95U+ZVrdOdh3fgH0l0e7RVkAsZryrSQIRhPVvmC60wTlh880eDyo+HpXQAAAABueyJvcmlnaW4iOiJodHRwczovL3MwLjJtZG4ubmV0OjQ0MyIsImZlYXR1cmUiOiJQcml2YWN5U2FuZGJveEFkc0FQSXMiLCJleHBpcnkiOjE2OTUxNjc5OTksImlzVGhpcmRQYXJ0eSI6dHJ1ZX0=">
+	<script src="./jquery.min.js.下载"></script>	
+</head>
+<body>
+	<div id="container" style="opacity: 1;">
+		<div class="slide-container f-wh">
+			<div class="slides f-wh" style="transform: translate(0px, 0px);">
+				<img class="image" src="./frame1.jpg">
+			</div>
+			<div class="slides f-wh" style="transform: translate(970px, 0px);">
+				<img class="image" src="./frame2.jpg">
+			</div>
+			<div class="slides f-wh" style="transform: translate(1940px, 0px);">
+				<img class="image" src="./frame3.jpg">
+			</div>
+			<div class="slides f-wh" style="transform: translate(-970px, 0px);">
+				<img class="image" src="./frame4.jpg">
+			</div>
+			<!-- <img class="logo" src="logo-white.svg" />	 -->
+		</div>
+			<img class="logo" src="./logo.svg">	
+		
+	
+		<div class="clickTag f-wh"></div>
+		<div id="arrow-right" class="arrow">
+			<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<rect x="0.00012207" width="30" height="30" fill="white"></rect>
+				<path d="M12.0001 6L21.0001 15L12.0001 24L11.1595 23.1593L19.3188 15L11.1595 6.84066L12.0001 6Z" fill="black"></path>
+				</svg>
+		</div>
+		<div id="arrow-left" class="arrow">
+			<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<rect width="30" height="30" fill="white"></rect>
+				<path d="M18 24L9 15L18 6L18.8407 6.84066L10.6813 15L18.8407 23.1593L18 24Z" fill="black"></path>
+				</svg>
+		</div>
+		<!-- <div class="legal-btn">Important information</div> -->
+	</div>
+	<script>
+	
+    var tl;
+    var distance = 970;
+    var slideLength;
+	var slider;
+	var currentSlide = 1;
+	var previousSlide = 0;
+	var content;
+	var numSlides = 4;
+    function preloadFiles(){
+        function startPreload(){function t(){e===a-1?r[a]():e++}var e=0,n=new Array,a=startPreload.arguments.length-1,r=startPreload.arguments;for(i=0;i<a;i++)n[i]=new Image,n[i].src=startPreload.arguments[i],addEvent(n[i],"load",t)}function _(t){return document.querySelector(t)}function addEvent(t,e,n){t.addEventListener?t.addEventListener(e,n,!1):t.attachEvent&&t.attachEvent("on"+e,n)}function removeEvent(t,e,n){t.addEventListener?t.removeEventListener(e,n,!1):t.attachEvent&&t.detachEvent("on"+e,n)}
+		startPreload(
+		'logo.svg',
+		startAnim)
+    }
+    window.onload = function(){
+		if (Enabler.isInitialized()) {
+			initDynamic();
+		} else {
+			Enabler.addEventListener(studio.events.StudioEvent.INIT, initDynamic);
+		}
+	}
+	function initDynamic(){
+		init();
+	}
+	
+	function init(){
+		if (Enabler.isPageLoaded()) {
+			preloadFiles();
+		} else {
+			Enabler.addEventListener(studio.events.StudioEvent.PAGE_LOADED, preloadFiles);
+		}
+	}
+
+    function startAnim() {
+    	slideLength = distance * (numSlides - 1);
+		slider = gsap.to('.slides',{});
+    	gsap.set('.slides',{x: function(i){
+			return i * distance;
+		}})
+    	// gsap.set("#arrow-right svg", {rotation:180})
+        tl = gsap.timeline({defaults:{duration:0.75, ease:"quad.out"}});       
+        gsap.set('#container', {opacity:1});
+        addEvents();
+        tl
+		.add(function(){
+			onRightArrowClick(this)
+		},"+=3.5")
+		.add(function(){
+			onRightArrowClick(this)
+		},"+=3.5")
+		.add(function(){
+			onRightArrowClick(this)
+		},"+=3.5")
+		.add(function(){
+			onRightArrowClick(this)
+		},"+=3.5")
+
+    }
+
+    function addEvents() {
+    	$('#arrow-right').on('click', onRightArrowClick);
+        $('#arrow-left').on('click', onLeftArrowClick);
+		$(".clickTag").on("click", function(e){
+			switch(currentSlide){
+				case 1:
+					Enabler.exit("Saudi is open for business Click", "https://www.business.hsbc.com/en-gb/insights/international/saudi-arabia-trade-corridors-outlook")
+				break;
+				case 2:
+					Enabler.exit("Silicon Kingdom Click", "https://www.business.hsbc.com/en-gb/insights/international/silicon-kingdom")
+				break;
+				case 3:
+					Enabler.exit("Saudi FDI Click", "https://www.business.hsbc.com/en-gb/insights/international/saudi-reform-momentum-creating-new-trade-opportunities")
+				break;
+				case 4:
+					Enabler.exit("112 billion Click", "https://www.business.hsbc.com/en-gb/insights/international/saudi-arabia-trade-corridors-outlook")
+				break;
+			}
+		})
+		
+		$(".clickTag").on("mouseenter", function(e){
+			// gsap.to('.cta',{backgroundColor:"#005946"})
+			// gsap.to('.cta-text',{color:"#fff"})
+		})
+		
+		$(".clickTag").on("mouseleave", function(){
+			// gsap.to('.cta',{backgroundColor:"#00915a"})
+			// gsap.to('.cta-text',{color:"#fff"})
+		})
+
+    };
+   
+    function onLeftArrowClick(e){
+		if(!slider.isActive()){
+			if(e.type == "click"){
+				tl.pause()
+				Enabler.counter("Left Arrow Clicked", true)
+			}
+			slider = gsap.to('.slides',{
+				duration:1,
+				ease: 'power3.inOut',
+				x:'+='+distance,
+				modifiers:{
+					x: gsap.utils.unitize( gsap.utils.wrap(-distance, slideLength) )
+				},
+				onStart:function(){
+					if(currentSlide == 1){
+						currentSlide = numSlides;
+					}else{
+						previousSlide = currentSlide;
+						currentSlide = currentSlide - 1;
+					}
+					
+				}
+				
+			})
+		}
+	}
+	
+	function onRightArrowClick(e){
+		
+		if(!slider.isActive()){
+			if(e.type == "click"){
+				tl.pause()
+				Enabler.counter("Right Arrow Clicked", true)
+			}
+			slider = gsap.to('.slides',{
+				duration:1,
+				ease: 'power3.inOut',
+				x:'-='+distance,
+				
+				modifiers:{
+					x: gsap.utils.unitize( gsap.utils.wrap(-distance, slideLength) )
+				},
+				onStart:function(){
+					if(currentSlide == numSlides){
+						currentSlide = 1;
+					}else{
+						previousSlide = currentSlide;
+						currentSlide = currentSlide + 1;
+					}
+					
+				}
+			})
+			
+		}
+	}
+	
+//-------------------------------------
+
+</script>
+<script>
+	var mouseeover_timer_5sec;
+	var	mouseeover_timer_30sec;
+	var	mouseeover_timer_1min;
+	var	mouseeover_timer_3min;
+	var	mouseeover_timer_5min;
+	
+	var Timer = function(callback, delay) {
+		var timerId, start, remaining = delay;
+
+		this.pause = function() {
+			window.clearTimeout(timerId);
+			remaining -= Date.now() - start;
+		};
+
+		this.resume = function() {
+			start = Date.now();
+			window.clearTimeout(timerId);
+			if(remaining > 0){
+				timerId = window.setTimeout(callback, remaining);
+			}
+		};
+	
+		this.resume();
+	}
+	mouseeover_timer_5sec = new Timer(function(){Enabler.counter("5 second counter", true)}, 5000)
+	mouseeover_timer_30sec = new Timer(function(){Enabler.counter("30 seconds counter", true)}, 30000)
+	mouseeover_timer_1min = new Timer(function(){Enabler.counter("1 minute counter", true)}, 60000)
+	mouseeover_timer_3min = new Timer(function(){Enabler.counter("3 minutes counter", true)}, 180000)
+	mouseeover_timer_5min = new Timer(function(){Enabler.counter("5 minutes counter", true)}, 300000)
+	mouseeover_timer_5sec.pause();
+	mouseeover_timer_30sec.pause();
+	mouseeover_timer_1min.pause();
+	mouseeover_timer_3min.pause();
+	mouseeover_timer_5min.pause();
+	
+	$("#container").on("mouseenter", function(){
+		mouseeover_timer_5sec.resume();
+		mouseeover_timer_30sec.resume();
+		mouseeover_timer_1min.resume();
+		mouseeover_timer_3min.resume();
+		mouseeover_timer_5min.resume();
+	})
+	
+	$("#container").on("mouseleave", function(){
+		mouseeover_timer_5sec.pause();
+		mouseeover_timer_30sec.pause();
+		mouseeover_timer_1min.pause();
+		mouseeover_timer_3min.pause();
+		mouseeover_timer_5min.pause();
+	})
+</script>
+
+
+
+<iframe style="display: none;" src="./saved_resource(2).html"></iframe></body></html>

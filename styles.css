@@ -1,0 +1,67 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
+#game {
+  text-align: center;
+  width: 300px;
+  margin: 0 auto;
+}
+
+#board {
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+#board {
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  justify-content: center;
+}
+
+.row div {
+  width: 45px;
+  height: 45px;
+  border: 2px solid #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#guess-input {
+  width: 100px;
+  padding: 5px;
+  font-size: 18px;
+  text-align: center;
+}
+
+#submit-guess {
+  padding: 5px 10px;
+  font-size: 18px;
+  margin-top: 10px;
+}
