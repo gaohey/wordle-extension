@@ -29,10 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (row) {
         for (let i = 0; i < 5; i++) {
           const cell = row.children[i];
-          cell.textContent = hintWord[i];
+          cell.textContent = hintWord[i].toUpperCase();
           cell.style.backgroundColor = ''; // Reset background color for hint
         }
         currentRow++;
+
       }
     } catch (error) {
       console.error('Error fetching hint:', error);
@@ -98,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // If no words found, display a random starter word
           if (!wordData || !wordData.length) {
             currentRow = 0;
-            const starterWords = ['raise', 'arise'];
+            const starterWords = ['RAISE', 'ARISE'];
             const randomWord = starterWords[Math.floor(Math.random() * starterWords.length)];
             
             const row = board.children[currentRow];
@@ -124,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             for (let i = 0; i < 5; i++) {
               const cell = row.children[i];
-              cell.textContent = word[i];
+              cell.textContent = word[i].toUpperCase();
               
               // Set colors based on score digit using Wordle's color scheme
               switch (score[i]) {

@@ -17,5 +17,5 @@
     }
   },
   "permissions": ["activeTab", "scripting", "tabs"],
-  "host_permissions": ["https://www.nytimes.com/*", "https://yianhe.pythonanywhere.com/*"]
+  "host_permissions": ["https://www.nytimes.com/games/wordle/*", "https://yianhe.pythonanywhere.com/*"]
 }
