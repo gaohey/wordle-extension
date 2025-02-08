@@ -50,10 +50,5 @@ Having issues or questions? Contact us at:
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Acknowledgments
-
-- Thanks to the NYT Wordle team for creating such an engaging game
-- Special thanks to all contributors and users who help improve this tool
-
 ---
-Made with ❤️ by Yian He
+Made with by Yian He
