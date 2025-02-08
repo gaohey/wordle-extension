@@ -5,6 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Wordle Game</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    #parse-wordle {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #538d4e;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #parse-wordle:hover {
+      background-color: #437c3d;
+    }
+
+    #parse-wordle:active {
+      transform: scale(0.98);
+    }
+  </style>
 </head>
 <body>
   <div id="game">
@@ -53,9 +74,7 @@
         <div></div>
       </div>
     </div>
-    <input type="text" id="guess-input" maxlength="5" />
-    <button id="submit-guess">Submit</button>
-    <button id="parse-wordle">Parse</button>
+    <button id="parse-wordle">Parse and Get Hint</button>
   </div>
   <script src="script.js"></script>
 </body>

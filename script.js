@@ -1,52 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
   const board = document.getElementById('board');
-  const guessInput = document.getElementById('guess-input');
-  const submitGuess = document.getElementById('submit-guess');
-  const word = 'HELLO'; // Example word, you can change this to any 5-letter word
   let currentRow = 0;
 
-  function checkGuess() {
-    const guess = guessInput.value.toUpperCase();
-    if (guess.length !== 5) {
-      alert('Please enter a 5-letter word.');
+  async function getHint(wordScores) {
+    if (!wordScores || wordScores.length === 0) {
+      alert('No words to analyze. Please parse the Wordle board first.');
       return;
     }
 
-    const row = board.children[currentRow];
-    for (let i = 0; i < 5; i++) {
-      const cell = row.children[i];
-      cell.textContent = guess[i];
-      if (guess[i] === word[i]) {
-        cell.style.backgroundColor = 'green';
-      } else if (word.includes(guess[i])) {
-        cell.style.backgroundColor = 'yellow';
-      } else {
-        cell.style.backgroundColor = 'gray';
+    const rawQuery = wordScores.join('-');
+    
+    try {
+      const response = await fetch(`https://yianhe.pythonanywhere.com/get-hint/${rawQuery}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    }
+      
+      const data = await response.json();
+      const hintWord = data.hint;
+      
+      if (!hintWord) {
+        alert('No hint available');
+        return;
+      }
 
-    currentRow++;
-    if (currentRow >= 6) {
-      alert('Game over!');
-      guessInput.disabled = true;
-      submitGuess.disabled = true;
+      // Display the hint word in the next row
+      const row = board.children[currentRow];
+      if (row) {
+        for (let i = 0; i < 5; i++) {
+          const cell = row.children[i];
+          cell.textContent = hintWord[i];
+          cell.style.backgroundColor = ''; // Reset background color for hint
+        }
+        currentRow++;
+      }
+    } catch (error) {
+      console.error('Error fetching hint:', error);
+      alert('Failed to get hint. Please try again.');
     }
   }
-
-  function handleSubmit() {
-    if (currentRow < 6) {
-      checkGuess();
-      guessInput.value = '';
-    }
-  }
-
-  submitGuess.addEventListener('click', handleSubmit);
-
-  guessInput.addEventListener('keypress', (event) => {
-    if (event.key === 'Enter') {
-      handleSubmit();
-    }
-  });
 
   function parseWordle() {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -66,29 +58,35 @@ document.addEventListener('DOMContentLoaded', () => {
           target: { tabId: activeTab.id },
           func: () => {
             const tiles = document.querySelectorAll('[class^="Tile-module_tile"]');
-            const words = [];
+            const formattedResults = [];
             let currentWord = '';
+            let currentScore = '';
             
             tiles.forEach((tile, index) => {
               if (index < 30) {
                 const letter = tile.textContent || '';
-                const evaluation = tile.getAttribute('data-state') || '';
+                const state = tile.getAttribute('data-state') || '';
                 currentWord += letter;
                 
-                // Every 5 letters, push the word and reset
+                // Convert state to number
+                let scoreDigit = '0';
+                if (state === 'correct') scoreDigit = '2';
+                else if (state === 'present') scoreDigit = '1';
+                currentScore += scoreDigit;
+                
+                // Every 5 letters, push the formatted result and reset
                 if ((index + 1) % 5 === 0) {
-                  words.push({
-                    word: currentWord,
-                    evaluations: Array.from(tiles).slice(index - 4, index + 1)
-                      .map(t => t.getAttribute('data-state') || '')
-                  });
+                  if (currentWord) {
+                    formattedResults.push(`${currentWord}${currentScore}`);
+                  }
                   currentWord = '';
+                  currentScore = '';
                 }
               }
             });
-            return words;
+            return formattedResults;
           }
-        }, (results) => {
+        }, async (results) => {
           if (chrome.runtime.lastError) {
             console.error('Script execution failed:', chrome.runtime.lastError);
             alert('Failed to execute script: ' + chrome.runtime.lastError.message);
@@ -103,31 +101,39 @@ document.addEventListener('DOMContentLoaded', () => {
           const rows = board.children;
           
           // Display the parsed words and colors
-          wordData.forEach((data, rowIndex) => {
-            if (!data.word) return;
-            
+          wordData.forEach((entry, rowIndex) => {
+            const word = entry.slice(0, 5);
+            const score = entry.slice(5);
             const row = rows[rowIndex];
+            
             for (let i = 0; i < 5; i++) {
               const cell = row.children[i];
-              cell.textContent = data.word[i];
+              cell.textContent = word[i];
               
-              // Set colors based on evaluation
-              switch (data.evaluations[i]) {
-                case 'correct':
-                  cell.style.backgroundColor = 'green';
+              // Set colors based on score digit using Wordle's color scheme
+              switch (score[i]) {
+                case '2':
+                  cell.style.backgroundColor = '#6aaa64';  // Wordle green
+                  cell.style.color = 'white';  // Text color
                   break;
-                case 'present':
-                  cell.style.backgroundColor = 'yellow';
+                case '1':
+                  cell.style.backgroundColor = '#c9b458';  // Wordle yellow
+                  cell.style.color = 'white';  // Text color
                   break;
-                case 'absent':
-                  cell.style.backgroundColor = 'gray';
+                case '0':
+                  cell.style.backgroundColor = '#787c7e';  // Wordle grey
+                  cell.style.color = 'white';  // Text color
                   break;
                 default:
                   cell.style.backgroundColor = '';
+                  cell.style.color = 'black';  // Reset text color
               }
             }
             currentRow++;
           });
+
+          // Get and display hint after parsing
+          await getHint(wordData);
         });
       } else {
         alert('Please navigate to the Wordle game on the New York Times website.');
@@ -135,5 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Add click event listener to the parse button
   document.getElementById('parse-wordle').addEventListener('click', parseWordle);
 });
