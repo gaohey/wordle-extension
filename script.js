@@ -1,10 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
   const board = document.getElementById('board');
+  const parseButton = document.getElementById('parse-wordle');
   let currentRow = 0;
 
   async function getHint(wordScores) {
     if (!wordScores || wordScores.length === 0) {
       alert('No words to analyze. Please parse the Wordle board first.');
+      parseButton.disabled = false;
+      parseButton.textContent = 'Parse and Get Hint';
       return;
     }
 
@@ -21,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
       if (!hintWord) {
         alert('No hint available');
+        parseButton.disabled = false;
+        parseButton.textContent = 'Parse and Get Hint';
         return;
       }
 
@@ -33,24 +38,38 @@ document.addEventListener('DOMContentLoaded', () => {
           cell.style.backgroundColor = ''; // Reset background color for hint
         }
         currentRow++;
-
       }
+      
+      // Re-enable button after hint is displayed
+      parseButton.disabled = false;
+      parseButton.textContent = 'Parse and Get Hint';
+
     } catch (error) {
       console.error('Error fetching hint:', error);
       alert('Failed to get hint. Please try again.');
+      parseButton.disabled = false;
+      parseButton.textContent = 'Parse and Get Hint';
     }
   }
 
   function parseWordle() {
+    // Disable button and show loading state
+    parseButton.disabled = true;
+    parseButton.textContent = 'Solving...';
+
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs.length === 0 || !tabs[0]) {
         alert('No active tab found.');
+        parseButton.disabled = false;
+        parseButton.textContent = 'Parse and Get Hint';
         return;
       }
 
       const activeTab = tabs[0];
       if (!activeTab.url) {
         alert('Cannot access tab URL. Make sure required permissions are set in manifest.json');
+        parseButton.disabled = false;
+        parseButton.textContent = 'Parse and Get Hint';
         return;
       }
 
@@ -91,6 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
           if (chrome.runtime.lastError) {
             console.error('Script execution failed:', chrome.runtime.lastError);
             alert('Failed to execute script: ' + chrome.runtime.lastError.message);
+            parseButton.disabled = false;
+            parseButton.textContent = 'Parse and Get Hint';
             return;
           }
 
@@ -110,6 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
               cell.style.color = 'black';
             }
             currentRow++;
+            parseButton.disabled = false;
+            parseButton.textContent = 'Parse and Get Hint';
             return;
           }
 
@@ -154,10 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       } else {
         alert('Please navigate to the Wordle game on the New York Times website.');
+        parseButton.disabled = false;
+        parseButton.textContent = 'Parse and Get Hint';
       }
     });
   }
 
   // Add click event listener to the parse button
-  document.getElementById('parse-wordle').addEventListener('click', parseWordle);
+  parseButton.addEventListener('click', parseWordle);
 });

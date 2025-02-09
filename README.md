@@ -51,4 +51,4 @@ Having issues or questions? Contact us at:
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
-Made with by Yian He
+Made by Yian He
