@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Wordle Game Solver Add-in",
-  "version": "1.0",
+  "name": "Wordle Solver Add-in",
+  "version": "1.3",
   "description": "Get smart hints for your Wordle game! This extension analyzes your current game and suggests optimal next guesses.",
   "icons": {
     "16": "icons/icon16.png", 

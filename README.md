@@ -13,7 +13,7 @@ A smart Chrome extension that helps you solve the daily NYT Wordle puzzle by ana
 
 ## Installation
 
-1. Download the extension from the Chrome Web Store (link coming soon)
+1. Download the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/wordle-game-solver-add-in/aobhllnmacmlocnldpaieempdpoagmcn)
 2. Click the "Add to Chrome" button
 3. The Wordle Solver icon will appear in your Chrome toolbar
 
