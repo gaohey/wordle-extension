@@ -81,11 +81,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const formattedResults = [];
             let currentWord = '';
             let currentScore = '';
+            let shouldContinue = true;
             
             tiles.forEach((tile, index) => {
+              // Skip if we've already found an incomplete row
+              if (!shouldContinue) return;
+              
               if (index < 30) {
                 const letter = tile.textContent || '';
                 const state = tile.getAttribute('data-state') || '';
+                
+                // Check if current tile is incomplete
+                if (state === 'tbd' || state === 'empty') {
+                  shouldContinue = false;
+                  // Reset current word if it's an incomplete row
+                  currentWord = '';
+                  currentScore = '';
+                  return;
+                }
+                
                 currentWord += letter;
                 
                 // Convert state to number
@@ -120,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // If no words found, display a random starter word
           if (!wordData || !wordData.length) {
             currentRow = 0;
-            const starterWords = ['RAISE', 'ARISE'];
+            const starterWords = ['TARSE','RAISE', 'ARISE'];
             const randomWord = starterWords[Math.floor(Math.random() * starterWords.length)];
             
             const row = board.children[currentRow];
