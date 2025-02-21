@@ -1,13 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
   const board = document.getElementById('board');
   const parseButton = document.getElementById('parse-wordle');
+  const possibleCount = document.getElementById('possible-count');
   let currentRow = 0;
 
   async function getHint(wordScores) {
     if (!wordScores || wordScores.length === 0) {
       alert('No words to analyze. Please parse the Wordle board first.');
       parseButton.disabled = false;
-      parseButton.textContent = 'Parse and Get Hint';
+      parseButton.textContent = 'Get Hint';
+      possibleCount.textContent = '';
       return;
     }
 
@@ -22,10 +24,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
       const hintWord = data.hint;
       
+      // Update possible words count
+      if (data.possible_choices !== undefined) {
+        possibleCount.innerHTML = `Possible Guesses<br>Left: ${data.possible_choices}`;
+      }
+      
       if (!hintWord) {
         alert('No hint available');
         parseButton.disabled = false;
-        parseButton.textContent = 'Parse and Get Hint';
+        parseButton.textContent = 'Get Hint';
         return;
       }
 
@@ -42,13 +49,14 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Re-enable button after hint is displayed
       parseButton.disabled = false;
-      parseButton.textContent = 'Parse and Get Hint';
+      parseButton.textContent = 'Get Hint';
 
     } catch (error) {
       console.error('Error fetching hint:', error);
       alert('Failed to get hint. Please try again.');
       parseButton.disabled = false;
-      parseButton.textContent = 'Parse and Get Hint';
+      parseButton.textContent = 'Get Hint';
+      possibleCount.textContent = '';
     }
   }
 
@@ -56,12 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Disable button and show loading state
     parseButton.disabled = true;
     parseButton.textContent = 'Solving...';
+    possibleCount.textContent = '';  // Clear count while loading
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs.length === 0 || !tabs[0]) {
         alert('No active tab found.');
         parseButton.disabled = false;
-        parseButton.textContent = 'Parse and Get Hint';
+        parseButton.textContent = 'Get Hint';
         return;
       }
 
@@ -69,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!activeTab.url) {
         alert('Cannot access tab URL. Make sure required permissions are set in manifest.json');
         parseButton.disabled = false;
-        parseButton.textContent = 'Parse and Get Hint';
+        parseButton.textContent = 'Get Hint';
         return;
       }
 
@@ -125,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Script execution failed:', chrome.runtime.lastError);
             alert('Failed to execute script: ' + chrome.runtime.lastError.message);
             parseButton.disabled = false;
-            parseButton.textContent = 'Parse and Get Hint';
+            parseButton.textContent = 'Get Hint';
             return;
           }
 
@@ -146,7 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             currentRow++;
             parseButton.disabled = false;
-            parseButton.textContent = 'Parse and Get Hint';
+            parseButton.textContent = 'Get Hint';
+            possibleCount.innerHTML = 'Possible Guesses<br>Left: 2315';
             return;
           }
 
@@ -192,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         alert('Please navigate to the Wordle game on the New York Times website.');
         parseButton.disabled = false;
-        parseButton.textContent = 'Parse and Get Hint';
+        parseButton.textContent = 'Get Hint';
       }
     });
   }

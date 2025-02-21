@@ -6,8 +6,19 @@
   <title>Wordle Solver</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    #parse-wordle {
+    .button-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       margin-top: 10px;
+      position: relative;
+    }
+
+    #parse-wordle {
+      position: absolute;
+      left: 75%;
+      transform: translateX(-50%);
+      margin-top: 0;
       padding: 10px 20px;
       font-size: 16px;
       background-color: #538d4e;
@@ -15,7 +26,9 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: background-color 0.3s;
+      min-width: 100px;
+      text-align: center;
     }
 
     #parse-wordle:hover {
@@ -23,13 +36,21 @@
     }
 
     #parse-wordle:active {
-      transform: scale(0.98);
+      transform: translateX(-50%) scale(0.98);
     }
 
     #parse-wordle:disabled {
       background-color: #cccccc;
       cursor: not-allowed;
-      transform: none;
+    }
+
+    #possible-count {
+      font-size: 14px;
+      color: #666;
+      flex: 0 0 auto;
+      text-align: center;
+      line-height: 1.2;
+      margin-left: 10px;
     }
   </style>
 </head>
@@ -80,7 +101,10 @@
         <div></div>
       </div>
     </div>
-    <button id="parse-wordle">Parse and Get Hint</button>
+    <div class="button-row">
+      <div id="possible-count"></div>
+      <button id="parse-wordle">Get Hint</button>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>
