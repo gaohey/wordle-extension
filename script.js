@@ -2,7 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const board = document.getElementById('board');
   const parseButton = document.getElementById('parse-wordle');
   const possibleCount = document.getElementById('possible-count');
+  const hintsSection = document.getElementById('top-hints');
   let currentRow = 0;
+  let topHints = [];
 
   async function getHint(wordScores) {
     if (!wordScores || wordScores.length === 0) {
@@ -16,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const rawQuery = wordScores.join('-');
     
     try {
-      const response = await fetch(`https://yianhe.pythonanywhere.com/get-hint/${rawQuery}`);
+      // const response = await fetch(`https://yianhe.pythonanywhere.com/get-hint/${rawQuery}`);
+      const response = await fetch(`https://yianhe.pythonanywhere.com/get-hint-multi/${rawQuery}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -24,9 +27,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
       const hintWord = data.hint;
       
-      // Update possible words count
+      // Store top hints but don't show them yet
+      topHints = data.top_hints || [];
+      
+      // Update possible words count and make it clickable if we have top hints
       if (data.possible_choices !== undefined) {
         possibleCount.innerHTML = `Possible Guesses<br>Left: ${data.possible_choices}`;
+        if (topHints.length > 0) {
+          possibleCount.style.cursor = 'pointer';
+          possibleCount.title = 'Click to see top suggestions';
+          possibleCount.onclick = showTopHints;
+          // Hide hints section when updating possible count
+          hintsSection.textContent = '';
+          hintsSection.classList.remove('show');
+        } else {
+          possibleCount.style.cursor = 'default';
+          possibleCount.onclick = null;
+          possibleCount.title = '';
+        }
       }
       
       if (!hintWord) {
@@ -57,10 +75,50 @@ document.addEventListener('DOMContentLoaded', () => {
       parseButton.disabled = false;
       parseButton.textContent = 'Get Hint';
       possibleCount.textContent = '';
+      possibleCount.onclick = null;
+      possibleCount.style.cursor = 'default';
+      possibleCount.title = '';
+      clearTopHints();
     }
   }
 
+  function showTopHints() {
+    if (topHints.length === 0) {
+      hintsSection.textContent = '';
+      hintsSection.classList.remove('show');
+      return;
+    }
+    
+    // Toggle hints visibility
+    if (hintsSection.classList.contains('show')) {
+      hintsSection.textContent = '';
+      hintsSection.classList.remove('show');
+      return;
+    }
+    
+    // Take only top 5 hints
+    const topFiveHints = topHints.slice(0, 5);
+    const hintsText = topFiveHints
+      .map((hint, index) => `${index + 1}. ${hint.toUpperCase()}`)
+      .join('<br>');
+    
+    hintsSection.innerHTML = `<strong>Top Suggestions (max 5):</strong><br>${hintsText}`;
+    hintsSection.classList.add('show');
+  }
+
+  function clearTopHints() {
+    hintsSection.textContent = '';
+    hintsSection.classList.remove('show');
+    topHints = [];
+  }
+
   function parseWordle() {
+    // Reset top hints when starting new parse
+    clearTopHints();
+    possibleCount.onclick = null;
+    possibleCount.style.cursor = 'default';
+    possibleCount.title = '';
+
     // Disable button and show loading state
     parseButton.disabled = true;
     parseButton.textContent = 'Solving...';
@@ -157,6 +215,11 @@ document.addEventListener('DOMContentLoaded', () => {
             parseButton.disabled = false;
             parseButton.textContent = 'Get Hint';
             possibleCount.innerHTML = 'Possible Guesses<br>Left: 2315';
+            // Make initial count clickable with all possible starter words
+            topHints = starterWords;
+            possibleCount.style.cursor = 'pointer';
+            possibleCount.title = 'Click to see recommended starter words';
+            possibleCount.onclick = showTopHints;
             return;
           }
 

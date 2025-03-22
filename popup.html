@@ -51,6 +51,27 @@
       text-align: center;
       line-height: 1.2;
       margin-left: 10px;
+      transition: text-decoration 0.3s, color 0.3s;
+    }
+
+    #possible-count:hover {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      color: #2f81f7;
+    }
+
+    .hints-section {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #666;
+      text-align: left;
+      padding: 0 10px;
+      min-height: 0;
+      transition: min-height 0.3s;
+    }
+
+    .hints-section.show {
+      min-height: 100px;
     }
   </style>
 </head>
@@ -105,6 +126,7 @@
       <div id="possible-count"></div>
       <button id="parse-wordle">Get Hint</button>
     </div>
+    <div id="top-hints" class="hints-section"></div>
   </div>
   <script src="script.js"></script>
 </body>
